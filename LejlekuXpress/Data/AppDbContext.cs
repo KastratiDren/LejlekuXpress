@@ -32,5 +32,23 @@ namespace LejlekuXpress.Data
         public DbSet<CheckOut> CheckOut { get; set; }
 
         public DbSet<Orders> Orders { get; set; }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
+
+        //    // Configure Cart relationships with NoAction for DeleteBehavior
+        //    modelBuilder.Entity<Cart>()
+        //        .HasOne(c => c.User)
+        //        .WithMany()
+        //        .HasForeignKey(c => c.UserId)
+        //        .OnDelete(DeleteBehavior.NoAction);
+
+        //    modelBuilder.Entity<Cart>()
+        //        .HasOne(c => c.Product)
+        //        .WithMany()
+        //        .HasForeignKey(c => c.ProductId)
+        //        .OnDelete(DeleteBehavior.NoAction);
+        //}
     }
 }
