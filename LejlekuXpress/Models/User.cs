@@ -28,5 +28,9 @@ namespace LejlekuXpress.Models
 
         public byte[]? ProfilePicture { get; set; }
 
+        [Required]
+        public int RoleId { get; set; }
+        public Roles Role { get; set; }
+
     }
 }
