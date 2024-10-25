@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LejlekuXpress.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241025172643_DbTables")]
+    [Migration("20241025180241_DbTables")]
     partial class DbTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0")
+                .HasAnnotation("ProductVersion", "6.0.35")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -390,7 +390,6 @@ namespace LejlekuXpress.Migrations
                     b.HasOne("LejlekuXpress.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -409,7 +408,6 @@ namespace LejlekuXpress.Migrations
                     b.HasOne("LejlekuXpress.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -428,7 +426,6 @@ namespace LejlekuXpress.Migrations
                     b.HasOne("LejlekuXpress.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
@@ -507,7 +504,6 @@ namespace LejlekuXpress.Migrations
                     b.HasOne("LejlekuXpress.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
