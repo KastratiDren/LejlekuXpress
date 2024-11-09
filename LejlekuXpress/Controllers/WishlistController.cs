@@ -1,5 +1,7 @@
 ﻿using LejlekuXpress.Data.DTO;
 using LejlekuXpress.Data.ServiceInterfaces;
+using LejlekuXpress.Models;
+using LejlekuXpress.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LejlekuXpress.Controllers
@@ -9,10 +11,12 @@ namespace LejlekuXpress.Controllers
     public class WishlistController : ControllerBase
     {
         private readonly IWishlistService _service;
+        private readonly LogService _logService;
 
-        public WishlistController(IWishlistService service)
+        public WishlistController(IWishlistService service, LogService logService)
         {
             _service = service;
+            _logService = logService;
         }
 
         #region Add
@@ -22,6 +26,13 @@ namespace LejlekuXpress.Controllers
             try
             {
                 var product = await _service.AddItem(request);
+
+                await _logService.CreateLog(new Log
+                {
+                    Action = "AddWishlist",
+                    Message = "Product added to wishlist successfully"
+                });
+
                 return Ok(product);
             }
             catch (Exception ex)
@@ -56,6 +67,13 @@ namespace LejlekuXpress.Controllers
             try
             {
                 var result = _service.DeleteItem(id);
+
+                await _logService.CreateLog(new Log
+                {
+                    Action = "DeleteWishlist",
+                    Message = "Product deleted from wishlist successfully"
+                });
+
                 return Ok(result);
             }
             catch (Exception ex)

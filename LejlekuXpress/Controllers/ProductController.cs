@@ -11,10 +11,12 @@ namespace LejlekuXpress.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _service;
+        private readonly LogService _logService;
 
-        public ProductController(IProductService service)
+        public ProductController(IProductService service, LogService logService)
         {
             _service = service;
+            _logService = logService;
         }
 
         #region Add
@@ -24,6 +26,12 @@ namespace LejlekuXpress.Controllers
             try
             {
                 var product = await _service.AddProduct(request);
+
+                await _logService.CreateLog(new Log
+                {
+                    Action = "AddProduct",
+                    Message = "Product added successfully"
+                });
 
                 return Ok(product);
             }

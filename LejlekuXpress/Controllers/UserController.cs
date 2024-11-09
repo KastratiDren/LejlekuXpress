@@ -1,5 +1,7 @@
 ﻿using LejlekuXpress.Data.DTO;
 using LejlekuXpress.Data.ServiceInterfaces;
+using LejlekuXpress.Models;
+using LejlekuXpress.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LejlekuXpress.Controllers
@@ -10,9 +12,11 @@ namespace LejlekuXpress.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _service;
-        public UserController(IUserService service)
+        private readonly LogService _logService;
+        public UserController(IUserService service, LogService logService)
         {
             _service = service;
+            _logService = logService;
         }
 
         #region Get
@@ -40,6 +44,13 @@ namespace LejlekuXpress.Controllers
             try
             {
                 var result = _service.DeleteUser(id);
+
+                await _logService.CreateLog(new Log
+                {
+                    Action = "DeleteUser",
+                    Message = "User deleted successfully"
+                });
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -92,6 +103,13 @@ namespace LejlekuXpress.Controllers
                 var result = _service.MakeMod(id);
                 if (result == null)
                     return NotFound();
+
+                await _logService.CreateLog(new Log
+                {
+                    Action = "MakeModerator",
+                    Message = "User became moderator successfully"
+                });
+
                 return Ok(result);
             }
             catch (Exception ex)

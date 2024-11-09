@@ -1,5 +1,7 @@
 ﻿using LejlekuXpress.Data.DTO;
 using LejlekuXpress.Data.ServiceInterfaces;
+using LejlekuXpress.Models;
+using LejlekuXpress.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -10,10 +12,12 @@ namespace LejlekuXpress.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _service;
+        private readonly LogService _logService;
 
-        public AuthController(IAuthService service)
+        public AuthController(IAuthService service, LogService logService)
         {
             _service = service;
+            _logService = logService;
         }
 
         [HttpPost("register")]
@@ -22,6 +26,13 @@ namespace LejlekuXpress.Controllers
             try
             {
                 var user = await _service.Register(request);
+
+                await _logService.CreateLog(new Log
+                {
+                    Action = "RegisterUser",
+                    Message = "User registered successfully"
+                });
+
                 return Ok(user);
             }
             catch (Exception ex)
@@ -40,6 +51,12 @@ namespace LejlekuXpress.Controllers
                 {
                     return Unauthorized();
                 }
+
+                await _logService.CreateLog(new Log
+                {
+                    Action = "LoginUser",
+                    Message = "User loged in successfully"
+                });
 
                 return Ok(new { token, isLoggedIn = true });
             }

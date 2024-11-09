@@ -1,6 +1,8 @@
 ﻿using LejlekuXpress.Data;
 using LejlekuXpress.Data.DTO;
 using LejlekuXpress.Data.ServiceInterfaces;
+using LejlekuXpress.Models;
+using LejlekuXpress.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LejlekuXpress.Controllers
@@ -11,9 +13,11 @@ namespace LejlekuXpress.Controllers
     {
 
         private readonly IPaymentService _service;
-        public PaymentController(IPaymentService service)
+        private readonly LogService _logService;
+        public PaymentController(IPaymentService service, LogService logService)
         {
             _service = service;
+            _logService = logService;
         }
 
         [HttpPost("add")]
@@ -22,6 +26,13 @@ namespace LejlekuXpress.Controllers
             try
             {
                 var payment = await _service.AddPayment(request);
+
+                await _logService.CreateLog(new Log
+                {
+                    Action = "AddPayment",
+                    Message = "Payment made successfully"
+                });
+
                 return Ok(payment);
             }
             catch (Exception ex)
