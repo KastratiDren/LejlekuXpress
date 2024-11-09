@@ -2,6 +2,8 @@ using LejlekuXpress.Data;
 using LejlekuXpress.Data.ServiceInterfaces;
 using LejlekuXpress.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,24 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<ICheckOutService, CheckOutService>();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+
+//mongo config
+builder.Services.Configure<MongoSettings>(
+    builder.Configuration.GetSection("MongoSettings"));
+
+builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
+    return new MongoClient(settings.ConnectionString);
+});
+
+builder.Services.AddScoped(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
+    var client = sp.GetRequiredService<IMongoClient>();
+    return client.GetDatabase(settings.DatabaseName);
+});
 
 
 builder.Services.AddControllers();
